@@ -1,21 +1,19 @@
-// pix.js
-
 document.getElementById('pixForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const key = document.getElementById('key').value;
     const typeKey = document.getElementById('typeKey').value;
-    const value = parseFloat(document.getElementById('value').value);
+    const value = 0.50;
     const documentValidation = document.getElementById('documentValidation').value || null;
 
-    const clientID = 'testesandbox_1687443996536';
-    const clientSecret = '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d';
+    const clientID = 'seu_client_id';
+    const clientSecret = 'seu_client_secret';
 
     const data = {
         key: key,
         typeKey: typeKey,
         value: value,
-        callbackUrl: 'https://webhook.com', // Substitua pela URL do seu webhook
+        callbackUrl: 'https://seu-webhook-url.com',
         documentValidation: documentValidation
     };
 
@@ -35,7 +33,6 @@ document.getElementById('pixForm').addEventListener('submit', function(event) {
         } else {
             document.getElementById('result').innerHTML = 'Erro na transferência: ' + result.response;
         }
-        console.log(result);
     })
     .catch(error => {
         document.getElementById('result').innerHTML = 'Erro ao realizar a transferência.';
