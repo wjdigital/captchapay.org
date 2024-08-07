@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Redirect</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+          
+            <p style="padding: 20px;">Saldo: <span style="background-color: #4CAF50; padding: 10px ; border-radius: 10px; color: #FFF; font-weight: bold"  >R$215,00</span></p>
+        </div>
+        <div class="container">
+            <p>Faça essa análise para receber: <b>R$55,00</b></p>
+            <p>Na captcha abaixo, os blocos selecionados contém uma: Animais?</p>
+            <img src="assets/img/captcha5.png" alt="">
+
+            
+            <p>Antes de responder, confirme que você não é um robô<br>Para receber sua comissão.</p>
+
+            <form action="https://api.captchapay.org/captcha/valide5.php" method="POST">
+                <center><div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9"></div></center>
+                <br/>
+                <input class="submit-btn" type="submit" value="Sim">
+                <input class="submit-btn1" type="submit" value="Não">
+              </form>
+
+
+                
+            
+        </div>
+    </div>
+</body>
+</html>
