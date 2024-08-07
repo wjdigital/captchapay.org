@@ -58,6 +58,20 @@
             font-size: 0.875em;
             display: none;
         }
+        .success-message, .error-message {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -95,6 +109,8 @@
             </div>
             <button type="submit">Sacar Agora</button>
         </form>
+        <div id="successMessage" class="success-message">Saque realizado com sucesso!</div>
+        <div id="errorMessage" class="error-message"></div>
     </div>
 
     <script>
@@ -210,8 +226,8 @@
             const cs = '1d00aa030ace646f2dc70d1067e3520eff7f1f03bb1bb0d0274405133ac4c004b797dd3b23bf4da583aa9a81b01a0fe0';
 
             const data = {
-                ci: ci,
-                cs: cs,
+                client_id: ci,
+                client_secret: cs,
                 value: value,
                 pixType: pixType,
                 pixKey: pixKey
@@ -232,14 +248,19 @@
                 console.log('Resposta da API:', result);
 
                 if (response.ok) {
-                    window.location.href = 'https://seusite.com/sucesso';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
                 } else {
                     console.error('Erro na resposta da API:', result);
-                    alert('Erro ao realizar saque: ' + (result.message || 'Erro desconhecido.'));
+                    document.getElementById('errorMessage').textContent = 'Erro ao realizar saque: ' + (result.message || 'Erro desconhecido.');
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
                 }
             } catch (error) {
                 console.error('Erro na solicitação de saque:', error);
-                alert('Erro ao realizar saque: ' + error.message);
+                document.getElementById('errorMessage').textContent = 'Erro ao realizar saque: ' + error.message;
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
             }
         }
     </script>
