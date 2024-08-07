@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transferência via Pix - Suitpay</title>
+</head>
+<body>
+    <h1>Transferência via Pix</h1>
+    <form id="pixForm">
+        <label for="key">Chave Pix:</label>
+        <input type="text" id="key" name="key" required><br><br>
+        
+        <label for="typeKey">Tipo de Chave:</label>
+        <select id="typeKey" name="typeKey">
+            <option value="document">CPF/CNPJ</option>
+            <option value="phoneNumber">Número de Telefone</option>
+            <option value="email">Email</option>
+            <option value="randomKey">Chave Aleatória</option>
+            <option value="paymentCode">Código de Pagamento</option>
+        </select><br><br>
+
+        <label for="value">Valor (R$):</label>
+        <input type="number" id="value" name="value" required step="0.01"><br><br>
+
+        <label for="documentValidation">Validação de Documento (opcional):</label>
+        <input type="text" id="documentValidation" name="documentValidation"><br><br>
+
+        <button type="submit">Efetuar Transferência</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script src="pix.js"></script>
+</body>
+</html>
