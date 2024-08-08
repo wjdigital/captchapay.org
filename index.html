@@ -22,6 +22,10 @@
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
+            display: none; /* Hide all containers by default */
+        }
+        .container.active {
+            display: block; /* Only display the active container */
         }
         picture img {
             width: 100%;
@@ -39,11 +43,6 @@
         .content {
             margin: 20px 0;
         }
-        .captcha {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
         .btn {
             display: block;
             width: 100%;
@@ -59,14 +58,6 @@
             background-color: #4caf50;
             color: white;
         }
-        .btn-red {
-            background-color: #f44336;
-            color: white;
-        }
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
         .error {
             color: red;
             text-align: center;
@@ -76,50 +67,6 @@
             text-align: center;
             margin-top: 20px;
             font-size: 1.2em;
-        }
-        .popup {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-radius: 5px;
-            z-index: 1000;
-        }
-        .popup img {
-            width: 50px;
-            height: 50px;
-        }
-        .popup-correct {
-            color: green;
-        }
-        .popup-wrong {
-            color: red;
-        }
-        .task-value {
-            text-align: center;
-            margin: 10px 0;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .progress-bar {
-            width: 100%;
-            background-color: #f3f3f3;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .progress-bar-fill {
-            height: 20px;
-            width: 0;
-            background-color: #4caf50;
-            border-radius: 5px;
-            text-align: center;
-            color: white;
-            line-height: 20px;
         }
         @media (max-width: 600px) {
             .container {
@@ -134,17 +81,11 @@
             }
         }
     </style>
-    <link rel="preload" href="https://scripts.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/player.js" as="script">
-    <link rel="preload" href="https://cdn.converteai.net/lib/js/smartplayer/v1/smartplayer.min.js" as="script">
-    <link rel="preload" href="https://images.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/thumbnail.jpg" as="image">
-    <link rel="preload" href="https://cdn.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/663fd08d4cd641000b73e481/main.m3u8" as="fetch">
-    <link rel="dns-prefetch" href="https://cdn.converteai.net">
-    <link rel="dns-prefetch" href="https://scripts.converteai.net">
-    <link rel="dns-prefetch" href="https://images.converteai.net">
-    <link rel="dns-prefetch" href="https://api.vturb.com.br">
 </head>
 <body>
-    <div class="container" id="page1">
+
+    <!-- Página Inicial -->
+    <div class="container active" id="page1">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
@@ -167,7 +108,8 @@
         <div class="error" id="errorMessage"></div>
     </div>
 
-    <div class="container" id="page2" style="display: none;">
+    <!-- Página de Tarefas -->
+    <div class="container" id="page2">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
@@ -196,7 +138,8 @@
         <div class="error" id="errorMessagePage2"></div>
     </div>
 
-    <div class="container" id="tasksCompletedPage" style="display: none;">
+    <!-- Página de Tarefas Concluídas -->
+    <div class="container" id="tasksCompletedPage">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
@@ -214,7 +157,8 @@
         <button class="btn btn-green" id="goToVideoButton">Assistir Vídeo</button>
     </div>
 
-    <div class="container" id="pageFinal" style="display: none;">
+    <!-- Página Final de Vídeo -->
+    <div class="container" id="pageFinal">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
@@ -240,7 +184,8 @@
         </div>
     </div>
 
-    <div class="container" id="withdrawPage" style="display: none;">
+    <!-- Página de Saque -->
+    <div class="container" id="withdrawPage">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
@@ -266,6 +211,7 @@
         </div>
     </div>
 
+    <!-- Popup -->
     <div class="popup" id="popup">
         <img id="popupIcon" src="" alt="Icon">
         <p id="popupText"></p>
