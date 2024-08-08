@@ -17,6 +17,7 @@ function updateTask() {
         document.getElementById('taskImage').src = tasks[currentTask].imagePng;
         document.getElementById('taskText').innerText = tasks[currentTask].text;
         document.getElementById('progresso').innerText = `Tarefa ${currentTask + 1} de ${tasks.length}`;
+        document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
     } else {
         document.getElementById('page2').style.display = 'none';
         document.getElementById('pageFinal').style.display = 'block';
@@ -25,6 +26,7 @@ function updateTask() {
 
 function recaptchaCallback() {
     document.getElementById('startButton').disabled = false;
+    document.getElementById('startButton').classList.add('btn-green');
 }
 
 document.getElementById('startButton').addEventListener('click', function() {
