@@ -21,7 +21,7 @@
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        img {
+        picture img {
             width: 100%;
             height: auto;
         }
@@ -92,7 +92,11 @@
 </head>
 <body>
     <div class="container" id="page1">
-        <img src="https://captchapay.org/assets/img/img1.png" alt="Google Captchas">
+        <picture>
+            <source srcset="assets/img/img1.webp" type="image/webp">
+            <source srcset="assets/img/img1.png" type="image/png">
+            <img src="assets/img/img1.png" alt="Google Captchas">
+        </picture>
         <div class="saldo" id="saldo">
             Saldo: R$100,00
         </div>
@@ -116,9 +120,11 @@
         <div class="content">
             <p id="taskText">Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.</p>
         </div>
-        <div>
-            <img id="taskImage" src="assets/img/captcha1.png" alt="Captcha com veículos">
-        </div>
+        <picture>
+            <source id="taskImageWebp" type="image/webp">
+            <source id="taskImagePng" type="image/png">
+            <img id="taskImage" alt="Captcha com veículos">
+        </picture>
         <button class="btn btn-green" id="yesButton">Sim</button>
         <button class="btn btn-red" id="noButton">Não</button>
         <div class="error" id="errorMessagePage2"></div>
@@ -134,20 +140,22 @@
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script>
         const tasks = [
-            { image: 'assets/img/captcha1.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.', answer: 'sim' },
-            { image: 'assets/img/captcha2.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém pessoas.', answer: 'sim' },
-            { image: 'assets/img/captcha3.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém casas.', answer: 'não' },
-            { image: 'assets/img/captcha4.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém motocicletas.', answer: 'sim' },
-            { image: 'assets/img/captcha5.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém animais.', answer: 'não' },
-            { image: 'assets/img/captcha6.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém semáforos.', answer: 'sim' },
-            { image: 'assets/img/captcha7.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém barcos.', answer: 'não' },
+            { imageWebp: 'assets/img/captcha1.webp', imagePng: 'assets/img/captcha1.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha2.webp', imagePng: 'assets/img/captcha2.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém pessoas.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha3.webp', imagePng: 'assets/img/captcha3.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém casas.', answer: 'não' },
+            { imageWebp: 'assets/img/captcha4.webp', imagePng: 'assets/img/captcha4.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém motocicletas.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha5.webp', imagePng: 'assets/img/captcha5.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém animais.', answer: 'não' },
+            { imageWebp: 'assets/img/captcha6.webp', imagePng: 'assets/img/captcha6.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém semáforos.', answer: 'sim' },
+            { imageWebp: 'assets/img/captcha7.webp', imagePng: 'assets/img/captcha7.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém barcos.', answer: 'não' },
         ];
         let currentTask = 0;
         let saldo = 100.00;
 
         function updateTask() {
             if (currentTask < tasks.length) {
-                document.getElementById('taskImage').src = tasks[currentTask].image;
+                document.getElementById('taskImageWebp').srcset = tasks[currentTask].imageWebp;
+                document.getElementById('taskImagePng').srcset = tasks[currentTask].imagePng;
+                document.getElementById('taskImage').src = tasks[currentTask].imagePng;
                 document.getElementById('taskText').innerText = tasks[currentTask].text;
                 document.getElementById('progresso').innerText = `Tarefa ${currentTask + 1} de ${tasks.length}`;
             } else {
