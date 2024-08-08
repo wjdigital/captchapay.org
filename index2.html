@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Captchas - Nova Ferramenta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .saldo {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 1.5em;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .captcha {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://captchapay.org/assets/img/img1.png" alt="Google Captchas">
+        <div class="content">
+            <p>O Google Captchas precisa de você para aumentar a segurança dos seus sites analisando os Captchas estão marcados corretamente ou incorretamente.</p>
+        </div>
+        <div class="saldo">
+            Saldo: R$100,00
+        </div>
+        <div class="content">
+            <p>Parabéns, você foi selecionado! Você acaba de receber acesso à nova ferramenta do Google para análise de Captchas. Aproveite, você já ganhou R$100,00! Faça 3 análises e realize seu primeiro saque em minutos! Antes de responder, confirme que você não é um robô para receber sua comissão.</p>
+        </div>
+        <div class="captcha">
+            <div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9"></div>
+        </div>
+        <button class="btn" id="startButton" disabled>Começar Agora</button>
+        <div class="error" id="errorMessage"></div>
+    </div>
+    
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        function recaptchaCallback() {
+            document.getElementById('startButton').disabled = false;
+        }
+
+        document.getElementById('startButton').addEventListener('click', function() {
+            if (grecaptcha.getResponse() === '') {
+                document.getElementById('errorMessage').innerText = 'Por favor, conclua o captcha antes de continuar.';
+            } else {
+                window.location.href = 'https://seu-site.com/novo-endereco';
+            }
+        });
+    </script>
+</body>
+</html>
