@@ -1,33 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captcha Redirect</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Google Captchas - Nova Ferramenta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .saldo {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 1.5em;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .captcha {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-green {
+            background-color: #4caf50;
+            color: white;
+        }
+        .btn-red {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .progresso {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+            .saldo {
+                font-size: 1.2em;
+            }
+            .btn {
+                font-size: 1em;
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="container">
-            <img src="assets/img/img1.png" alt="Description of image" class="responsive-img" />
-            <p>O Google Captchas precisa de você para aumentar a segurança dos seus sites analisando os Captchas estão marcados corretamente ou incorretamente.</p>
-            <p style="padding: 20px;">Saldo: <span style="background-color: #4CAF50; padding: 10px ; border-radius: 10px; color: #FFF; font-weight: bold"  >R$100,00</span></p>
+    <div class="container" id="page1">
+        <img src="https://captchapay.org/assets/img/img1.png" alt="Google Captchas">
+        <div class="saldo" id="saldo">
+            Saldo: R$100,00
         </div>
-        <div class="container">
-            <p><b>Parabéns, você foi selecionado!</b></p>
-            <p>Você acaba de receber acesso à nova ferramenta do Google para análise de Captchas. <b>Aproveite, você já ganhou R$100,00!</b></p>
-            <p>Faça 3 análises e <b>realize seu primeiro saque</b> em minutos!</p>
-            <p>Antes de responder, confirme que você não é um robô<br>Para receber sua comissão.</p>
-
-            <form action="https://api.captchapay.org/captcha/valide4.php" method="POST">
-                <center><div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9"></div></center>
-                <br/>
-                <input class="submit-btn" type="submit" value="Sim">
-                <input class="submit-btn1" type="submit" value="Não">
-              </form>
-
+        <div class="content">
+            <p>Ao fazer essa análise, você vai receber: R$25,00 de comissão.</p>
         </div>
+        <div class="content">
+            <p>Antes de responder, por favor, complete o captcha para seguir para a próxima tarefa.</p>
+        </div>
+        <div class="captcha">
+            <div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9" data-callback="recaptchaCallback"></div>
+        </div>
+        <button class="btn" id="startButton" disabled>Começar Agora</button>
+        <div class="error" id="errorMessage"></div>
     </div>
+
+    <div class="container" id="page2" style="display: none;">
+        <div class="progresso" id="progresso">
+            Tarefa 1 de 7
+        </div>
+        <div class="content">
+            <p id="taskText">Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.</p>
+        </div>
+        <div>
+            <img id="taskImage" src="assets/img/captcha1.png" alt="Captcha com veículos">
+        </div>
+        <button class="btn btn-green" id="yesButton">Sim</button>
+        <button class="btn btn-red" id="noButton">Não</button>
+        <div class="error" id="errorMessagePage2"></div>
+    </div>
+
+    <div class="container" id="pageFinal" style="display: none;">
+        <div class="content">
+            <p>Parabéns! Você concluiu todas as tarefas. Para efetuar o saque do valor total, assista ao vídeo de 4 minutos abaixo.</p>
+        </div>
+        <button class="btn btn-green" id="finalButton">Assistir Vídeo e Realizar Saque</button>
+    </div>
+    
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        const tasks = [
+            { image: 'assets/img/captcha1.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.', answer: 'sim' },
+            { image: 'assets/img/captcha2.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém pessoas.', answer: 'sim' },
+            { image: 'assets/img/captcha3.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém casas.', answer: 'não' },
+            { image: 'assets/img/captcha4.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém motocicletas.', answer: 'sim' },
+            { image: 'assets/img/captcha5.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém animais.', answer: 'não' },
+            { image: 'assets/img/captcha6.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém semáforos.', answer: 'sim' },
+            { image: 'assets/img/captcha7.png', text: 'Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém barcos.', answer: 'não' },
+        ];
+        let currentTask = 0;
+        let saldo = 100.00;
+
+        function updateTask() {
+            if (currentTask < tasks.length) {
+                document.getElementById('taskImage').src = tasks[currentTask].image;
+                document.getElementById('taskText').innerText = tasks[currentTask].text;
+                document.getElementById('progresso').innerText = `Tarefa ${currentTask + 1} de ${tasks.length}`;
+            } else {
+                document.getElementById('page2').style.display = 'none';
+                document.getElementById('pageFinal').style.display = 'block';
+            }
+        }
+
+        function recaptchaCallback() {
+            document.getElementById('startButton').disabled = false;
+        }
+
+        document.getElementById('startButton').addEventListener('click', function() {
+            if (grecaptcha.getResponse() === '') {
+                document.getElementById('errorMessage').innerText = 'Por favor, conclua o captcha antes de continuar.';
+            } else {
+                saldo += 25.00;
+                document.getElementById('saldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+                new Audio('assets/audio/som-dinheiro.mp3').play();
+                document.getElementById('page1').style.display = 'none';
+                document.getElementById('page2').style.display = 'block';
+                updateTask();
+            }
+        });
+
+        function validateAnswer(answer) {
+            const correct = tasks[currentTask].answer;
+            if (answer === correct) {
+                saldo += saldo * 0.15;
+                new Audio('assets/audio/som-dinheiro.mp3').play();
+            } else {
+                document.getElementById('errorMessagePage2').innerText = 'Resposta errada. Avançando para a próxima tarefa.';
+            }
+            document.getElementById('saldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+            currentTask++;
+            updateTask();
+        }
+
+        document.getElementById('yesButton').addEventListener('click', function() {
+            validateAnswer('sim');
+        });
+
+        document.getElementById('noButton').addEventListener('click', function() {
+            validateAnswer('não');
+        });
+
+        document.getElementById('finalButton').addEventListener('click', function() {
+            window.location.href = 'vsl.html';
+        });
+    </script>
 </body>
 </html>
