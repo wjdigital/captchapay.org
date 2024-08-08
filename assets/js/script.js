@@ -50,7 +50,7 @@ function validateAnswer(answer) {
     } else {
         document.getElementById('errorMessagePage2').innerText = 'Resposta errada. Avançando para a próxima tarefa.';
     }
-    document.getElementById('saldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
+    document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
     currentTask++;
     updateTask();
 }
