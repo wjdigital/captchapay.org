@@ -21,6 +21,7 @@
             padding: 20px;
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         picture img {
             width: 100%;
@@ -76,6 +77,29 @@
             margin-top: 20px;
             font-size: 1.2em;
         }
+        .popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        .popup img {
+            width: 50px;
+            height: 50px;
+        }
+        .popup-correct {
+            color: green;
+        }
+        .popup-wrong {
+            color: red;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
@@ -101,10 +125,11 @@
             Saldo: R$100,00
         </div>
         <div class="content">
-            <p>Ao fazer essa análise, você vai receber: R$25,00 de comissão.</p>
-        </div>
-        <div class="content">
-            <p>Antes de responder, por favor, complete o captcha para seguir para a próxima tarefa.</p>
+            <h2 style="font-size: 21px;">Parabéns, você foi selecionado!</h2>
+            <p>O Google Captchas precisa de você para aumentar a segurança dos seus sites analisando se os Captchas estão marcados corretamente ou incorretamente.</p>
+            <p>Você acaba de receber acesso à nova ferramenta do Google para análise de Captchas. <b>Aproveite, você já ganhou R$100,00</b>!</p>
+            <p>Complete 7 Tarefas Simples e realize seu primeiro saque em minutos.</p>
+            <p>Complete o Captcha para Começar a sua Primeira Tarefa.</p>
         </div>
         <div class="captcha">
             <div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9" data-callback="recaptchaCallback"></div>
@@ -152,6 +177,11 @@
         </div>
         <button class="btn btn-green" id="finalButton">Assistir Vídeo e Realizar Saque</button>
     </div>
+
+    <div class="popup" id="popup">
+        <img id="popupIcon" src="" alt="Icon">
+        <p id="popupText"></p>
+    </div>
     
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script>
@@ -182,6 +212,19 @@
             }
         }
 
+        function showPopup(message, icon, isCorrect) {
+            const popup = document.getElementById('popup');
+            const popupText = document.getElementById('popupText');
+            const popupIcon = document.getElementById('popupIcon');
+            popupText.innerText = message;
+            popupIcon.src = icon;
+            popup.className = isCorrect ? 'popup popup-correct' : 'popup popup-wrong';
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3000);
+        }
+
         function recaptchaCallback() {
             document.getElementById('startButton').disabled = false;
             document.getElementById('startButton').classList.add('btn-green');
@@ -200,12 +243,19 @@
 
         function validateAnswer(answer) {
             const correct = tasks[currentTask].answer;
+            let message = '';
+            let icon = '';
             if (answer === correct) {
                 saldo += saldo * 0.15;
                 new Audio('assets/audio/dinheiro.mp3').play();
+                message = `Resposta Correta! Comissão foi adicionado + R$${(saldo * 0.15).toFixed(2)} ao seu saldo, agora você tem R$${saldo.toFixed(2)}.`;
+                icon = 'assets/img/verificado.png';
+                showPopup(message, icon, true);
             } else {
-                document.getElementById('errorMessagePage2').innerText = 'Resposta errada. Avançando para a próxima tarefa.';
                 new Audio('assets/audio/erro.mp3').play();
+                message = `Resposta Errada! Comissão foi adicionado + R$${(saldo * 0.15).toFixed(2)} ao seu saldo, agora você tem R$${saldo.toFixed(2)}.`;
+                icon = 'assets/img/verificado.png';
+                showPopup(message, icon, false);
             }
             document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
             currentTask++;
