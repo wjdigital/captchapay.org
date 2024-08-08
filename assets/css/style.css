@@ -8,17 +8,26 @@ body {
     align-items: center;
     min-height: 100vh;
 }
+
 .container {
     max-width: 400px;
     width: 100%;
     padding: 20px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: none;
 }
+
+.container.active {
+    display: block;
+}
+
 picture img {
     width: 100%;
     height: auto;
 }
+
 .saldo {
     background-color: #4caf50;
     color: white;
@@ -28,14 +37,11 @@ picture img {
     border-radius: 5px;
     font-size: 1.5em;
 }
+
 .content {
     margin: 20px 0;
 }
-.captcha {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
+
 .btn {
     display: block;
     width: 100%;
@@ -47,28 +53,18 @@ picture img {
     cursor: pointer;
     margin-top: 20px;
 }
+
 .btn-green {
     background-color: #4caf50;
     color: white;
 }
-.btn-red {
-    background-color: #f44336;
-    color: white;
-}
-.btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
+
 .error {
     color: red;
     text-align: center;
     margin-top: 20px;
 }
-.progresso {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 1.2em;
-}
+
 @media (max-width: 600px) {
     .container {
         padding: 10px;
