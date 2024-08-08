@@ -22,6 +22,10 @@
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
+            display: none;
+        }
+        .container.active {
+            display: block;
         }
         picture img {
             width: 100%;
@@ -38,11 +42,6 @@
         }
         .content {
             margin: 20px 0;
-        }
-        .captcha {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
         }
         .btn {
             display: block;
@@ -144,7 +143,7 @@
     <link rel="dns-prefetch" href="https://api.vturb.com.br">
 </head>
 <body>
-    <div class="container" id="page1">
+    <div class="container active" id="page1">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
             <source srcset="assets/img/img1.png" type="image/png">
@@ -335,8 +334,8 @@
             if (grecaptcha.getResponse() === '') {
                 document.getElementById('errorMessage').innerText = 'Por favor, conclua o captcha antes de continuar.';
             } else {
-                document.getElementById('page1').style.display = 'none';
-                document.getElementById('page2').style.display = 'block';
+                document.getElementById('page1').classList.remove('active');
+                document.getElementById('page2').classList.add('active');
                 updateTask();
             }
         });
@@ -372,16 +371,17 @@
         });
 
         document.getElementById('goToVideoButton').addEventListener('click', function() {
-            document.getElementById('tasksCompletedPage').style.display = 'none';
-            document.getElementById('pageFinal').style.display = 'block';
+            document.getElementById('tasksCompletedPage').classList.remove('active');
+            document.getElementById('pageFinal').classList.add('active');
+            document.getElementById('finalSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
             setTimeout(() => {
                 document.getElementById('withdrawButton').style.display = 'block';
             }, 60000); // 1 minuto
         });
 
         document.getElementById('withdrawButton').addEventListener('click', function() {
-            document.getElementById('pageFinal').style.display = 'none';
-            document.getElementById('withdrawPage').style.display = 'block';
+            document.getElementById('pageFinal').classList.remove('active');
+            document.getElementById('withdrawPage').classList.add('active');
             document.getElementById('withdrawSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
         });
 
