@@ -139,6 +139,14 @@
     </div>
 
     <div class="container" id="pageFinal" style="display: none;">
+        <picture>
+            <source srcset="assets/img/img1.webp" type="image/webp">
+            <source srcset="assets/img/img1.png" type="image/png">
+            <img src="assets/img/img1.png" alt="Google Captchas">
+        </picture>
+        <div class="saldo" id="finalSaldo">
+            Saldo: R$100,00
+        </div>
         <div class="content">
             <p>Parabéns! Você concluiu todas as tarefas. Para efetuar o saque do valor total, assista ao vídeo de 4 minutos abaixo.</p>
         </div>
@@ -169,6 +177,7 @@
                 document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
             } else {
                 document.getElementById('page2').style.display = 'none';
+                document.getElementById('finalSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
                 document.getElementById('pageFinal').style.display = 'block';
             }
         }
@@ -176,15 +185,13 @@
         function recaptchaCallback() {
             document.getElementById('startButton').disabled = false;
             document.getElementById('startButton').classList.add('btn-green');
+            new Audio('assets/audio/ok.mp3').play();
         }
 
         document.getElementById('startButton').addEventListener('click', function() {
             if (grecaptcha.getResponse() === '') {
                 document.getElementById('errorMessage').innerText = 'Por favor, conclua o captcha antes de continuar.';
             } else {
-                saldo += 25.00;
-                document.getElementById('saldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
-                new Audio('assets/audio/som-dinheiro.mp3').play();
                 document.getElementById('page1').style.display = 'none';
                 document.getElementById('page2').style.display = 'block';
                 updateTask();
@@ -195,9 +202,10 @@
             const correct = tasks[currentTask].answer;
             if (answer === correct) {
                 saldo += saldo * 0.15;
-                new Audio('assets/audio/som-dinheiro.mp3').play();
+                new Audio('assets/audio/dinheiro.mp3').play();
             } else {
                 document.getElementById('errorMessagePage2').innerText = 'Resposta errada. Avançando para a próxima tarefa.';
+                new Audio('assets/audio/erro.mp3').play();
             }
             document.getElementById('taskSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
             currentTask++;
