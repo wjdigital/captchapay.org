@@ -144,6 +144,7 @@
     <link rel="dns-prefetch" href="https://api.vturb.com.br">
 </head>
 <body>
+    <!-- Estrutura da página 1 -->
     <div class="container" id="page1">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
@@ -167,6 +168,7 @@
         <div class="error" id="errorMessage"></div>
     </div>
 
+    <!-- Estrutura da página 2 -->
     <div class="container" id="page2" style="display: none;">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
@@ -189,13 +191,14 @@
             <img id="taskImage" alt="Captcha com veículos">
         </picture>
         <div class="progress-bar">
-            <div class="progress-bar-fill" id="progressBarFill">0%</div>
+            <div class="progress-bar-fill" id="progressBarFill">0%</</div>
         </div>
         <button class="btn btn-green" id="yesButton">Sim</button>
         <button class="btn btn-red" id="noButton">Não</button>
         <div class="error" id="errorMessagePage2"></div>
     </div>
 
+    <!-- Estrutura da página de tarefas concluídas -->
     <div class="container" id="tasksCompletedPage" style="display: none;">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
@@ -214,6 +217,7 @@
         <button class="btn btn-green" id="goToVideoButton">Assistir Vídeo</button>
     </div>
 
+    <!-- Estrutura da página final -->
     <div class="container" id="pageFinal" style="display: none;">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
@@ -240,6 +244,7 @@
         </div>
     </div>
 
+    <!-- Estrutura da página de saque -->
     <div class="container" id="withdrawPage" style="display: none;">
         <picture>
             <source srcset="assets/img/img1.webp" type="image/webp">
@@ -374,6 +379,7 @@
         document.getElementById('goToVideoButton').addEventListener('click', function() {
             document.getElementById('tasksCompletedPage').style.display = 'none';
             document.getElementById('pageFinal').style.display = 'block';
+            document.getElementById('finalSaldo').innerText = `Saldo: R$${saldo.toFixed(2)}`;
             setTimeout(() => {
                 document.getElementById('withdrawButton').style.display = 'block';
             }, 60000); // 1 minuto
@@ -390,11 +396,8 @@
             const pixKey = document.getElementById('pixKey').value;
             const pixType = document.getElementById('pixType').value;
             const data = {
-                client_id: 'wjmkt_1713979947271',
-                client_secret: '49d8d1419abe58357fa6ec5d4e562b302c6c661df14ff8b745b6b3376df4cb4c3478cd59160d456791aa555dcae974ee',
-                key_pix: pixKey,
-                key_type: pixType,
-                value: saldo.toFixed(2),
+                key: pixKey,
+                typeKey: pixType
             };
 
             fetch('https://api.captchapay.org/captcha/process_pix.php', {
