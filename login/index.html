@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-container img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .login-container h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .login-container p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .login-container input[type="email"],
+        .login-container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .login-container input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .login-container input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .success-message {
+            color: green;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .hidden {
+            display: none;
+        }
+        .analysis-container img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .analysis-container h2 {
+            font-size: 21px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="https://captchapay.org/assets/img/img1.png" alt="Logo">
+        <h1>Login</h1>
+        <p>Utilize o email que fez a compra da licença para estar fazendo login na plataforma.</p>
+        <form id="login-form" action="https://api.captchapay.org/wp-content/processa_login.php" method="post">
+            <input type="email" name="email" placeholder="Digite seu email" required>
+            <input type="submit" value="Login">
+        </form>
+        <div id="result-message"></div>
+    </div>
+
+    <div id="analysis-container" class="analysis-container hidden">
+        <img src="https://captchapay.org/assets/img/analise.png" alt="Análise">
+        <h2>Conta em Análise</h2>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('result-message');
+                const loginForm = document.getElementById('login-form');
+                const analysisContainer = document.getElementById('analysis-container');
+
+                if (data.success) {
+                    loginForm.classList.add('hidden');
+                    messageDiv.innerHTML = '<p class="success-message">Login Efetuado</p>';
+                    analysisContainer.classList.remove('hidden');
+                } else {
+                    messageDiv.innerHTML = `<p class="error-message">${data.message}</p>`;
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        });
+    </script>
+</body>
+</html>
